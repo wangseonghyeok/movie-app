@@ -47,11 +47,28 @@ app.get("/gmarket/:item", async (req, res) => {
 
   const page = await browser.newPage();
   await page.setViewport({
-    width: 1920,
-    height: 50000,
+    width: 100,
+    height: 1080,
   });
   await page.goto(`http://browse.gmarket.co.kr/search?keyword=${searchItem}`);
   //await autoScroll(page);
+  await page.evaluate(async () => {
+    console.log(document.body.scrollHeight);
+    const scrollHeight = document.body.scrollHeight;
+    const aa = await new Promise((resolve, reject) => {
+      let total = 0;
+      const amount = 200;
+      const timer = setInterval(() => {
+        window.scrollBy(0, amount);
+        total += amount;
+        if (total > scrollHeight) {
+          clearInterval(timer);
+          resolve("end");
+        }
+      }, 50);
+    });
+    console.log(aa);
+  });
 
   const content = await page.content();
   const $ = cheerio.load(content);
