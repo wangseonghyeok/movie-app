@@ -87,6 +87,93 @@ app.get("/gmarket/:item", async (req, res) => {
   res.json(sendItemsArray);
   //res.send(content);
 });
+app.get("/gmarket02/:item", async (req, res) => {
+  const item = req.params.item;
+  const searchItem = encodeURIComponent(item);
+  console.log(item);
+  const browser = await puppeteer.launch({
+    headless: false,
+  });
+
+  const page = await browser.newPage();
+  await page.setViewport({
+    width: 1000,
+    height: 1080,
+  });
+  await page.goto(`http://browse.gmarket.co.kr/search?keyword=${searchItem}`);
+  //await autoScroll(page);
+  await page.evaluate(async () => {
+    console.log(document.body.scrollHeight);
+    const scrollHeight = document.body.scrollHeight;
+    const aa = await new Promise((resolve, reject) => {
+      let total = 0;
+      const amount = 200;
+      window.scrollTo(0, scrollHeight);
+      const timer = setTimeout(() => {
+        clearTimeout(timer);
+        resolve("end");
+      }, 3000);
+    });
+    console.log(aa);
+  });
+
+  const content = await page.content();
+  const $ = cheerio.load(content);
+  const items = $(".box__component-itemcard");
+  const sendItemsArray = [];
+
+  //console.log($(items[2]).find("img").attr("src"));
+  items.each((idx, item) => {
+    //await wait(3000);
+    const title = $(item).find(".text__item").text();
+    const price = $(item).find(".text__value").text();
+    const img = $(item).find(".image__item").attr("src");
+    const link = $(item).find(".box__image a").attr("href");
+    sendItemsArray.push({ title: title, price: price, img: img, link: link });
+  });
+  res.json(sendItemsArray);
+  //res.send(content);
+});
+app.get("/youtube/:word", async (req, res) => {
+  try {
+    const word = req.params.word;
+    const queryWord = encodeURIComponent(word);
+    const browser = await puppeteer.launch({ headless: true });
+    const page = await browser.newPage();
+    await page.setViewport({
+      width: 1920,
+      height: 30000,
+    });
+    await page.goto(`https://www.youtube.com/results?search_query=${queryWord}`, { waitUntil: "load" });
+
+    const content = await page.content();
+    const $ = cheerio.load(content);
+    const items = $("#dismissible");
+    console.log(items.length);
+    let listArr = [];
+    items.each((idx, item) => {
+      const img = $(item).find("#thumbnail").find(".yt-img-shadow").attr("src");
+      //console.log($(item).find("#channel-name").length);
+      // const title = $(item).find("#video-title:nth-child(2)").text();
+      const title = $(item).find("#title-wrapper").find("#video-title").attr("title");
+      const link = $(item).find("#thumbnail").attr("href");
+      const view = $(item).find("#metadata-line").find(".ytd-video-meta-block:nth-child(1)").text();
+      const time = $(item).find("#metadata-line").find(".ytd-video-meta-block:nth-child(2)").text();
+      const auth = $(item).find("#channel-info #channel-name").find(".yt-simple-endpoint").text();
+      listArr.push({
+        img,
+        title,
+        link,
+        view,
+        time,
+        auth,
+      });
+    });
+    res.json(listArr);
+  } catch (err) {
+    console.log(err);
+  }
+});
 
 app.get("/test", (req, res) => {
   axios({

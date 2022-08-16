@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "nodemon index"
+    "dev": "nodemon index",
+    "start": "node index"
   },
   "keywords": [],
   "author": "",
@@ -20,3 +21,4 @@
     "puppeteer": "^16.1.0"
   }
 }
+
