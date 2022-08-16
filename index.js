@@ -94,7 +94,7 @@ app.get("/gmarket02/:item", async (req, res) => {
   console.log(item);
   const browser = await puppeteer.launch({
     headless: true,
-    args: ["--no-sandbox", "--disable-setuid-sandbox"],
+    args: ["--no-sandbox", "--disable-setuid-sandbox", "--window-size=1600,2000"],
   });
 
   const page = await browser.newPage();
