@@ -101,7 +101,7 @@ app.get("/gmarket02/:item", async (req, res) => {
     width: 1000,
     height: 1080,
   });
-  await page.goto(`http://browse.gmarket.co.kr/search?keyword=${searchItem}`);
+  await page.goto(`https://browse.gmarket.co.kr/search?keyword=${searchItem}`);
   //await autoScroll(page);
   await page.evaluate(async () => {
     console.log(document.body.scrollHeight);
