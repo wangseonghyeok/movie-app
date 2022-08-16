@@ -93,7 +93,7 @@ app.get("/gmarket02/:item", async (req, res) => {
   const searchItem = encodeURIComponent(item);
   console.log(item);
   const browser = await puppeteer.launch({
-    headless: false,
+    headless: true,
   });
 
   const page = await browser.newPage();
