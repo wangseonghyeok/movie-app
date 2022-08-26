@@ -8,9 +8,9 @@ app.set("port", process.env.PORT || 8100);
 const PORT = app.get("port");
 
 app.use(cors());
-app.get("/", (req, res) => {
-  res.send("hello express");
-});
+// app.get("/", (req, res) => {
+//   res.send("hello express");
+// });
 
 app.get("/megabox", async (req, res) => {
   // const item = req.params.item;
