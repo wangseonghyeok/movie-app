@@ -7,7 +7,7 @@ const app = express();
 app.set("port", process.env.PORT || 8100);
 const PORT = app.get("port");
 
-app.use(cors());
+app.use(cors({ credentials: true }));
 app.get("/", (req, res) => {
   res.send("hello express");
 });
@@ -71,6 +71,7 @@ app.get("/megabox/:item", async (req, res) => {
   console.log(item);
   const browser = await puppeteer.launch({
     headless: true,
+    args: ["--no-sandbox", "--disable-setuid-sandbox"],
   });
 
   const page = await browser.newPage();
